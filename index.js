@@ -6,18 +6,8 @@ var app = express();
 app.use(bodyParser.json());
 
 var timeserie = require('./series');
-var countryTimeseries = require('./country-series');
 
 var now = Date.now();
-
-for (var i = timeserie.length -1; i >= 0; i--) {
-  var series = timeserie[i];
-  var decreaser = 0;
-  for (var y = series.datapoints.length -1; y >= 0; y--) {
-    series.datapoints[y][1] = Math.round((now - decreaser) /1000) * 1000;
-    decreaser += 50000;
-  }
-}
 
 var annotation = {
   name : "annotation name",
@@ -108,28 +98,7 @@ app.all('/query', function(req, res){
   console.log(req.url);
   console.log(req.body);
 
-  var tsResult = [];
-  let fakeData = timeserie;
-
-  if (req.body.adhocFilters && req.body.adhocFilters.length > 0) {
-    fakeData = countryTimeseries;
-  }
-
-  _.each(req.body.targets, function(target) {
-    if (target.type === 'table') {
-      tsResult.push(table);
-    } else {
-      var k = _.filter(fakeData, function(t) {
-        return t.target === target.target;
-      });
-
-      _.each(k, function(kk) {
-        tsResult.push(kk)
-      });
-    }
-  });
- 
-  res.json(tsResult);
+  res.json(timeserie);
   res.end();
 });
 

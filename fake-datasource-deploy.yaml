@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fake-datasource
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fake-datasource
+  template:
+    metadata:
+      labels:
+        app: fake-datasource
+    spec:
+      containers:
+      - name: fake-datasource
+        image: quay.io/clyang82/fake-datasource 
+        command: ["node", "index.js"]
+        imagePullPolicy: Always 
+        ports:
+        - containerPort: 3333
+          name: http
+          protocol: TCP
+
